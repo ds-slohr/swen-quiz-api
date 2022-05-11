@@ -31,7 +31,7 @@ public class Room {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "room")
+  @OneToMany(mappedBy = "room")
   @JsonManagedReference
   private Set<Question> questions = new HashSet<>();
 

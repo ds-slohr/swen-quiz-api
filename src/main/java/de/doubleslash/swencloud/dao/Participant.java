@@ -1,5 +1,6 @@
 package de.doubleslash.swencloud.dao;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -34,7 +35,12 @@ public class Participant {
       name = "participant_answer",
       joinColumns = @JoinColumn(name = "participant_id"),
       inverseJoinColumns = @JoinColumn(name = "answer_id"))
+  @JsonManagedReference
   private Set<Answer> answers = new HashSet<>();
+
+  public void addAnswer(Answer ans) {
+    answers.add(ans);
+  }
 
   private String name;
 

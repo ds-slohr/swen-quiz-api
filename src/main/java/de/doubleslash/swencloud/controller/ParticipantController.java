@@ -5,12 +5,13 @@ import de.doubleslash.swencloud.repository.ParticipantRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/participants")
+@RequestMapping("/participants/{name}")
 public class ParticipantController {
 
   @Autowired
@@ -22,7 +23,7 @@ public class ParticipantController {
   }
 
   @PostMapping
-  public Participant add(String name) {
+  public Participant add(@PathVariable String name) {
     var participant = new Participant();
     participant.setName(name);
     return participantRepository.save(participant);

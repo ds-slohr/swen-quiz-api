@@ -1,5 +1,6 @@
 package de.doubleslash.swencloud.dao;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -33,9 +34,11 @@ public class Answer {
 
   @ManyToOne
   @JoinColumn(name = "question_id")
+  @JsonBackReference
   private Question question;
 
   @ManyToMany(mappedBy = "answers")
+  @JsonBackReference
   private Set<Participant> participants = new HashSet<>();
 
   @Column(name = "answer", nullable = false)
@@ -43,10 +46,6 @@ public class Answer {
 
   @Column(name = "is_true", nullable = false)
   private boolean isTrue;
-
-  public void addParticipant(Participant par) {
-    participants.add(par);
-  }
 
   @Override
   public boolean equals(Object o) {

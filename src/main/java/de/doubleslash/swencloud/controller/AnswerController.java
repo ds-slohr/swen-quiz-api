@@ -3,6 +3,7 @@ package de.doubleslash.swencloud.controller;
 import de.doubleslash.swencloud.dao.Answer;
 import de.doubleslash.swencloud.dao.Question;
 import de.doubleslash.swencloud.dto.AnswerDto;
+import de.doubleslash.swencloud.repository.AnswerRepository;
 import de.doubleslash.swencloud.repository.ParticipantRepository;
 import de.doubleslash.swencloud.repository.QuestionRepository;
 import java.util.Set;
@@ -20,6 +21,9 @@ import org.springframework.web.server.ResponseStatusException;
 public class AnswerController {
 
   @Autowired
+  private AnswerRepository answerRepository;
+
+  @Autowired
   private QuestionRepository questionRepository;
 
   @Autowired
@@ -32,20 +36,18 @@ public class AnswerController {
 
   @PostMapping
   public Answer add(@PathVariable String roomIdentifier, @PathVariable Long questionId, AnswerDto ans) {
-    var question = findQuestion(questionId, roomIdentifier);
     var answer = new Answer();
     answer.setAnswer(ans.getAnswer());
     answer.setTrue(ans.isTrue());
-    question.addAnswer(answer);
-    questionRepository.save(question);
-    return answer;
+    answer.setQuestion(findQuestion(questionId, roomIdentifier));
+    return answerRepository.save(answer);
   }
 
   @PostMapping("{answerId}/participants/{id}")
   public Answer addParticipant(
       @PathVariable String roomIdentifier,
-      @PathVariable Long questionId,
-      @PathVariable String answerId,
+      @PathVariable long questionId,
+      @PathVariable long answerId,
       @PathVariable long id) {
 
     var participant = participantRepository.findById(id)
@@ -61,7 +63,8 @@ public class AnswerController {
             new ResponseStatusException(HttpStatus.NOT_FOUND,
                 "Unable to find answer with id: " + answerId + " belonging to question with identifier: "
                     + questionId));
-    answer.addParticipant(participant);
+    participant.addAnswer(answer);
+    participantRepository.save(participant);
     return answer;
   }
 

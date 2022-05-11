@@ -2,6 +2,7 @@ package de.doubleslash.swencloud.dao;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -41,13 +42,9 @@ public class Question {
   @Column(name = "question", nullable = false)
   private String question;
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "id")
+  @OneToMany(mappedBy = "question")
+  @JsonManagedReference
   private Set<Answer> answers = new HashSet<>();
-
-  @JsonIgnore
-  public void addAnswer(Answer answer) {
-    answers.add(answer);
-  }
 
   @Override
   public boolean equals(Object o) {
